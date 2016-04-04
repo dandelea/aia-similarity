@@ -13,7 +13,7 @@ Aplicación para la asignatura AIA (Aplicaciones de Inteligencia Artificial) del
 * Instalar numpy, scipy y scikit
  * <code>pip install numpy</code>
  * <code>sudo apt-get install build-essential python3-dev python3-setuptools python3-numpy python3-scipy libatlas-dev libatlas3gf-base</code>
- * <code>sudo pip3 install -U scikit-learn
+ * <code>sudo pip3 install -U scikit-learn</code>
 * Instalar pytables y hdf5
  * <code>cd ~</code>
  * <code>sudo wget https://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.16.tar.gz</code>
@@ -28,4 +28,6 @@ Aplicación para la asignatura AIA (Aplicaciones de Inteligencia Artificial) del
  * <code>cd ~</code>
  * <code>git clone git://github.com/matplotlib/matplotlib.git</code>
  * <code>cd matplotlib</code>
- * <code>sudo python3 setup.py install</code
+ * <code>sudo python3 setup.py install</code>
+* Instalar NLTK
+ * <code>sudo pip install -U nltk</code>
