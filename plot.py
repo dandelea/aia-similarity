@@ -1,45 +1,54 @@
-import itertools
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
-def scatterplot_matrix(data, names, **kwargs):
-    """Plots a scatterplot matrix of subplots.  Each row of "data" is plotted
-    against other rows, resulting in a nrows by nrows grid of subplots with the
-    diagonal subplots labeled with "names".  Additional keyword arguments are
-    passed on to matplotlib's "plot" command. Returns the matplotlib figure
-    object containg the subplot grid."""
-    numvars, numdata = data.shape
-    fig, axes = plt.subplots(nrows=numvars, ncols=numvars, figsize=(8,8))
-    fig.subplots_adjust(hspace=0.05, wspace=0.05)
+def plot(population, groups, iteration):
 
-    for ax in axes.flat:
-        # Hide all ticks and labels
-        ax.xaxis.set_visible(False)
-        ax.yaxis.set_visible(False)
+	population_c = np.copy(population)
 
-        # Set up ticks only on one side for the "edge" subplots...
-        if ax.is_first_col():
-            ax.yaxis.set_ticks_position('left')
-        if ax.is_last_col():
-            ax.yaxis.set_ticks_position('right')
-        if ax.is_first_row():
-            ax.xaxis.set_ticks_position('top')
-        if ax.is_last_row():
-            ax.xaxis.set_ticks_position('bottom')
+	# Por cada individuo
+	y = np.zeros(population_c.shape[0])
+	for i in range(population_c.shape[0]):
+		element = population_c[i]
+		distances = []
+		# calcula las distancias con los grupos
+		for group in groups:
+			distance = np.linalg.norm(element - group)
+			distances.append(distance)
+		# clasificacion: Se queda con aquel grupo de distancia minima
+		y[i] = np.argmin(distances)
 
-    # Plot the data.
-    for i, j in zip(*np.triu_indices_from(axes, k=1)):
-        for x, y in [(i,j), (j,i)]:
-            axes[x,y].plot(data[x], data[y], **kwargs)
+	for group in groups:
+		population_c = np.vstack([population_c, group])
+		y = np.append(y,-1)
 
-    # Label the diagonal subplots...
-    for i, label in enumerate(names):
-        axes[i,i].annotate(label, (0.5, 0.5), xycoords='axes fraction',
-                ha='center', va='center')
-
-    # Turn on the proper x or y axes ticks.
-    for i, j in zip(range(numvars), itertools.cycle((-1, 0))):
-        axes[j,i].xaxis.set_visible(True)
-        axes[i,j].yaxis.set_visible(True)
-
-    return fig
+	cont = 1
+	for i in range(4):
+		for j in range(4):
+			plt.subplot(4,4,cont)
+			if i==3:
+				if j==0:
+					plt.xlabel('Sepal Length')
+				elif j==1:
+					plt.xlabel('Sepal Width')
+				elif j==2:
+					plt.xlabel('Petal Length')
+				elif j==3:
+					plt.xlabel('Petal Width')
+			if j==0:
+				if i==0:
+					plt.ylabel('Sepal Length')
+				elif i==1:
+					plt.ylabel('Sepal Width')
+				elif i==2:
+					plt.ylabel('Petal Length')
+				elif i==3:
+					plt.ylabel('Petal Width')
+			if i!=j:
+				print((i,j))
+				plt.scatter(population_c[:,i], population_c[:,j], c=y)
+			else:
+				plt.xticks([]), plt.yticks([])				
+			cont += 1
+	plt.savefig('files/iris_'+ str(iteration) +'.png')
+	plt.clf()

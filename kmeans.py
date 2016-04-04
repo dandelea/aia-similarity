@@ -1,12 +1,10 @@
 import numpy as np
+from plot import plot
 import random
-import matplotlib.pyplot as plt
-
-from plot import scatterplot_matrix
 
 from sklearn.datasets import load_iris
 
-def data():
+def iris_data():
 	return load_iris().data
 
 def generateK(population, k):
@@ -21,14 +19,20 @@ def mean(population, indexes):
 		r[i] = np.mean(population[indexes, i])
 	return r
 
-def kmeans(population, k=3):
+def kmeans(population, k=3, display_plots=False):
 	if k>0:
 
 		y = np.zeros(population.shape[0]) # Clasificacion del individuo i-esimo
 
 		groups = generateK(population, k) # Coordenadas iniciales de los grupos
 
+		if display_plots:
+			for file in os.listdir('files'):
+				if file.endswith('.png') and file.startswith('iris_'):
+					os.remove('files/' + file)
+
 		has_changed = True
+		it = 1
 		while has_changed:
 
 			# Por cada individuo
@@ -49,41 +53,15 @@ def kmeans(population, k=3):
 				has_changed &= not np.array_equal(m, groups[i])
 				groups[i] = m
 
-			plot(population, groups)
+			if display_plots:
+				plot(population, groups, it)
+			it += 1
 
 		return groups
 	else:
 		raise ValueError('K value must be positive')
 
-def plot(population, groups):
-
-	# Por cada individuo
-	y = np.zeros(population.shape[0])
-	for i in range(population.shape[0]):
-		element = population[i]
-		distances = []
-		# calcula las distancias con los grupos
-		for group in groups:
-			distance = np.linalg.norm(element - group)
-			distances.append(distance)
-		# clasificacion: Se queda con aquel grupo de distancia minima
-		y[i] = np.argmin(distances)
-
-	for group in groups:
-		population = np.vstack([population, group])
-		y = np.append(y,-1)
-
-	scatterplot_matrix(population, y)
-
-	'''for i in range(1,5):
-		for j in range(1,5):
-			if i!=j:
-				plt.subplot(16,i,j)
-				plt.scatter(population[:,i-1], population[:,j-1], c=y)
-			
-	plt.show()'''
-
-if __name__=='__main__':
-	population = data()
-	aux = kmeans(population, 2)
-	print(aux)
+def task01(k=5, display_plots=True):
+	population = iris_data()
+	groups = kmeans(population)
+	print(groups, k, display_plots)
