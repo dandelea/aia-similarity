@@ -2,36 +2,16 @@ import json
 import numpy as np
 import string
 
+from StemTokenizer import StemTokenizer
+
 from nltk import word_tokenize
 from nltk.corpus import stopwords        
-from nltk.stem.porter import PorterStemmer
 from nltk.stem.snowball import SnowballStemmer
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-def most_similar(corpus, query, N=5, language='english'):
-
-	# NLTK languages stop words. to prevent stop words from tfidf analysis.
-	stop = stopwords.words(language)
-
-	# NLTK stemming. Words are transformed to its root.
-	stemmer = SnowballStemmer(language, ignore_stopwords=True)
-
-	def stem_tokens(tokens, stemmer):
-		stemmed = []
-		for item in tokens:
-			stemmed.append(stemmer.stem(item))
-		return stemmed
-
-	def tokenize(text):
-		# Prevent punctuations ,.;... to occur in words
-		text = "".join([ch for ch in text if ch not in string.punctuation])
-		tokens = word_tokenize(text)
-		stems = stem_tokens(tokens, stemmer)
-		return stems
-
-	vectorizer = TfidfVectorizer(tokenizer=tokenize, stop_words=stop)
-	tfidf = vectorizer.fit_transform(corpus).toarray()
+def most_similar(vectorizer, query, N, language):
+	tfidf = vectorizer.toarray()
 
 	q = vectorizer.transform([query]).toarray()[0] # query weight vector
 
@@ -53,8 +33,14 @@ def task02(N=5):
 	query = json_data["query"]
 	corpus = json_data["corpus"]
 
-	a = most_similar(corpus, query, N, language='spanish')
-	print(a)
+	# NLTK languages stop words. to prevent stop words from tfidf analysis.
+	stop = stopwords.words('spanish')
+
+	vectorizer = TfidfVectorizer(tokenizer=StemTokenizer('spanish'), stop_words=stop)
+	vectorizer.fit_transform(corpus)
+
+	result = most_similar(vectorizer, query, N, 'spanish')
+	print(result)
 
 if __name__=='__main__':
 	task02()

@@ -1,4 +1,4 @@
-# 05-aia
+# 05-Similitud de textos
 Aplicación para la asignatura AIA (Aplicaciones de Inteligencia Artificial) del Máster de Ingeniería Informática de la Universidad de Sevilla.
 
 ## Instalación
@@ -30,4 +30,4 @@ Aplicación para la asignatura AIA (Aplicaciones de Inteligencia Artificial) del
  * <code>cd matplotlib</code>
  * <code>sudo python3 setup.py install</code>
 * Instalar NLTK
- * <code>sudo pip install -U nltk</code>
+ * <code>sudo pip3 install -U nltk</code>
