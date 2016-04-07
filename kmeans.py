@@ -1,9 +1,8 @@
 import math
 import numpy as np
+import os
 from plot import plot
 import random
-
-import time
 
 from sklearn.datasets import load_iris
 
@@ -13,7 +12,6 @@ def iris_data():
 def generateK(population, k):
 	sample = random.sample(list(population), k)
 	return np.array(sample)
-	#return np.array([[5.8,2.7,3.9,1.2], [6.5,3,5.2,2]])
 
 def distance_points(p, q):
 	vector = p-q
@@ -66,15 +64,15 @@ def kmeans(population, k=3, display_plots=False):
 			if display_plots:
 				plot(population, groups, it)
 			it += 1
-
+		print("Total iterations: " + str(it))
 		return groups
 	else:
 		raise ValueError('K value must be positive')
 
 def task01(k=5, display_plots=True):
 	population = iris_data()
-	groups = kmeans(population)
-	print(groups, k, display_plots)
+	groups = kmeans(population, k, display_plots)
+	print(groups)
 
 def test_task01_time(maxk = 100):
 	t = time.time()

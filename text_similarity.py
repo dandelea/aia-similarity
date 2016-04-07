@@ -1,23 +1,19 @@
 import json
 import numpy as np
-import string
 
 from StemTokenizer import StemTokenizer
 
-from nltk import word_tokenize
-from nltk.corpus import stopwords        
-from nltk.stem.snowball import SnowballStemmer
+from nltk.corpus import stopwords
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-def most_similar(vectorizer, query, N, language):
-	tfidf = vectorizer.toarray()
-
+def most_similar(vectorizer, population, query, N, language):
 	q = vectorizer.transform([query]).toarray()[0] # query weight vector
 
-	similarities = np.zeros(tfidf.shape[0])
-	for i in range(tfidf.shape[0]):
-		similarities[i] = cos_similarity(tfidf[i],q)
+	similarities = np.zeros(population.shape[0])
+	for i in range(population.shape[0]):
+		row = population[i].toarray()
+		similarities[i] = cos_similarity(row,q)
 	
 	indexes = similarities.argsort()[-N:][::-1] # Get indexes of N max values. K most similar documents
 	return indexes
@@ -37,9 +33,9 @@ def task02(N=5):
 	stop = stopwords.words('spanish')
 
 	vectorizer = TfidfVectorizer(tokenizer=StemTokenizer('spanish'), stop_words=stop)
-	vectorizer.fit_transform(corpus)
+	population = vectorizer.fit_transform(corpus)
 
-	result = most_similar(vectorizer, query, N, 'spanish')
+	result = most_similar(vectorizer, population, query, N, 'spanish')
 	print(result)
 
 if __name__=='__main__':

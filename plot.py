@@ -45,7 +45,6 @@ def plot(population, groups, iteration):
 				elif i==3:
 					plt.ylabel('Petal Width')
 			if i!=j:
-				print((i,j))
 				plt.scatter(population_c[:,i], population_c[:,j], c=y)
 			else:
 				plt.xticks([]), plt.yticks([])				
