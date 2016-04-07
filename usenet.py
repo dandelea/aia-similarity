@@ -1,3 +1,4 @@
+import json
 import numpy as np
 import pickle
 
@@ -34,3 +35,12 @@ def task03_run(query, k, N):
 	indexes = similarities.argsort()[-N:][::-1] # Get indexes of N max values. K most similar documents
 	indexes = [candidates[ind] for ind in indexes]
 	print(indexes)
+
+	with open('files/task03.json', 'r') as jsonfile:
+		data = json.load(jsonfile)
+	print("____________________")
+	print(data[indexes[0]])
+	print("____________________")
+	print(data[indexes[1]])
+	print("____________________")
+	print(data[indexes[2]])
